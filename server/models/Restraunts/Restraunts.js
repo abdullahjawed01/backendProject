@@ -63,11 +63,11 @@ let RestrauntSchema = new mongoose.Schema({
     },
     orderHistory:{
         type:Array,
-        default:null
+        default:[]
     },
     customerOrder:{
         type:Array,
-        default:null
+        default:[]
     }
 },{timestamps:true})
 

@@ -57,11 +57,11 @@ let customerSchema = new mongoose.Schema({
     },
     orderHistory:{
         type:Array,
-        default:null,
+        default:[],
     },
     currentOrder:{
         type:Array,
-        default:null
+        default:[]
     }
 },{timestamps:true})
 

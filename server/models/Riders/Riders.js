@@ -54,11 +54,11 @@ let ridersSchema = new mongoose.Schema({
     },
     currentOrder:{
         type:Array,
-        default:null,
+        default:[],
     },
-    orderHisory:{
+    orderHistory:{
         type:Array,
-        default:null
+        default:[]
     }
 },{timestamps:true})
 
