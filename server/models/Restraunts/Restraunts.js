@@ -44,18 +44,11 @@ let RestrauntSchema = new mongoose.Schema({
             default:null
         }
     },
-    menu:[
-        {itemName:{
-            type:String,
-            require:true,
-            default:null
-        },
-        itemPrice:{
-            type:String,
-            require:true,
-            default:null
-        }}
-    ],
+    menu:{
+        type:Object,
+        require:true
+    }
+    ,
     address:{
         type:String,
         require:true,

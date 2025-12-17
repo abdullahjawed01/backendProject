@@ -59,7 +59,7 @@ router.get("/view-menu", async (req, res) => {
   try {
     let viewmenu = await restrauntModel.find(
       {
-        restrauntName:"Niloufer",
+        restrauntName: "Niloufer",
       },
       {
         menu: {
@@ -76,83 +76,74 @@ router.get("/view-menu", async (req, res) => {
   }
 });
 
+router.post("/placeOrder", async (req, res) => {
+  try {
+    let order = req.body.restrauntName;
+    let customerOrder1 = req.body.customerOrder;
+    let check = await restrauntModel.findOne({ restrauntName: order });
+    let user = await customerModel.findOne({
+      email: "abdullahjawed2021@gmail.com",
+    });
+    let rider = await ridersModel.findOne({ RidersName: "Mike Rider" });
+    check.customerOrder.push(customerOrder1);
+    rider.currentOrder.push(customerOrder1);
+    user.currentOrder.push(customerOrder1);
+    await rider.save();
+    await user.save();
+    await check.save();
+    res.status(200).json({ msg: "Order done succefully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
 
+router.get("/riderdetails", async (req, res) => {
+  try {
+    let check = await ridersModel.find();
+    res.status(200).json(check);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
 
-router.post("/placeOrder",async(req,res)=>{
-    try {
-        let order = req.body.restrauntName 
-        let customerOrder1 = req.body.customerOrder
-        let check = await restrauntModel.findOne({restrauntName:order})
-        let user = await customerModel.findOne({email:"abdullahjawed2021@gmail.com"})
-        let rider = await ridersModel.findOne({RidersName:"Mike Rider"})
-        check.customerOrder.push(customerOrder1)
-        rider.currentOrder.push(customerOrder1)
-        user.currentOrder.push(customerOrder1)
-        await rider.save()
-        await user.save()
-        await check.save()
-        res.status(200).json({msg:"Order done succefully"})
+router.get("/currentOrder", async (req, res) => {
+  try {
+    let order = await restrauntModel.findOne({ restrauntName: "Niloufer" });
+    let menu = order.customerOrder;
+    res.status(200).json(menu);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
 
+router.post("/orderComplete", async (req, res) => {
+  try {
+    let user = await customerModel.findOne({
+      email: "abdullahjawed2021@gmail.com",
+    });
+    let restraunt = await restrauntModel.findOne({ restrauntName: "Niloufer" });
+    let rider = await ridersModel.findOne({ RidersName: "Mike Rider" });
 
+    user.orderHistory.push(user.currentOrder);
+    user.currentOrder = [];
 
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(error)
-    }
-})
+    restraunt.orderHistory.push(restraunt.customerOrder);
+    restraunt.customerOrder = [];
 
-router.get("/riderdetails",async(req,res)=>{
-    try {
-        let check = await ridersModel.find()
-        res.status(200).json(check)
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(error)
-    }
-})
+    rider.orderHistory.push(rider.currentOrder);
+    rider.currentOrder = [];
 
-router.get("/currentOrder",async(req,res)=>{
-    try {
-        let order = await restrauntModel.findOne({restrauntName:"Niloufer"})
-        let menu = order.customerOrder
-        res.status(200).json(menu)
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(error)
-    }
-})
+    await user.save();
+    await restraunt.save();
+    await rider.save();
 
-
-router.post("/orderComplete",async(req,res)=>{
-    try {
-        let user = await customerModel.findOne({email:"abdullahjawed2021@gmail.com"})
-        let restraunt = await restrauntModel.findOne({restrauntName:"Niloufer"})
-        let rider = await ridersModel.findOne({RidersName:"Mike Rider"})
-
-
-      user.orderHistory.push(user.currentOrder);
-      user.currentOrder = [];
-    
-
-   
-      restraunt.orderHistory.push(restraunt.customerOrder);
-      restraunt.customerOrder = [];
-    
-
-    
-      rider.orderHistory.push(rider.currentOrder);
-      rider.currentOrder = [];
-    
-
-        await user.save()
-        await restraunt.save()
-        await rider.save()
-
-        res.status(200).json("The order is completed thanks!")
-    } catch (error) {
-        console.log(error);
-    }
-})
-
+    res.status(200).json("The order is completed thanks!");
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 export default router;

@@ -79,4 +79,55 @@ router.get("/riderdetails",async(req,res)=>{
     }
 })
 
+
+
+router.post("/addmenu/:_id", async (req, res) => {
+  try {
+    let { key, itemName, itemPrice } = req.body;
+    let final = await restrauntModel.updateOne(
+      { _id: req.params._id },
+      { $set: { [`menu.${key}`]: { itemName, itemPrice } } }
+    );
+    res.status(200).json(final);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+router.put("/update", async (req, res) => {
+  try {
+    let { itemName, itemPrice, key, id } = req.body;
+
+    let upmenu = await restrauntModel.updateOne(
+      { _id: id },
+      {
+        $set: {
+          [`menu.${key}.itemName`]: itemName,
+          [`menu.${key}.itemPrice`]: itemPrice,
+        },
+      }
+    );
+
+    res.status(200).json(upmenu);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+
+router.delete("/deleteMenu",async(req,res)=>{
+    try {
+        let {key,id} = req.body 
+        let upmenu  
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error)
+    }
+})
+
+
+
+
 export default router
